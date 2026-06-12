@@ -11,7 +11,7 @@ const headingF = "'Fredoka One', cursive"
 
 /* ── Main cylinder slides ── */
 const MAIN_SLIDES = [
-  { src: "/Devi_bear.jpg",         label: "Crochet Bears 🧸" },
+  { src: "/Tray.avif",         label: "Crochet Bears 🧸" },
   { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700&q=80", label: "Artisan Fox 🦊" },
   { src: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700&q=80", label: "Knit Elephant 🐘" },
   { src: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700&q=80", label: "Block Racer 🚗" },
