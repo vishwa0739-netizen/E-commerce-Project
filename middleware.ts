@@ -1,10 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// Routes that require a logged-in user
 const PROTECTED_ROUTES = ["/account", "/orders", "/checkout", "/order-success"];
-
-// Routes that require admin role
 const ADMIN_ROUTES = ["/admin"];
 
 function isProtected(pathname: string): boolean {
@@ -19,7 +16,7 @@ function isAdmin(pathname: string): boolean {
   );
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   let res = NextResponse.next({ request: req });
 
   const supabase = createServerClient(
@@ -39,7 +36,6 @@ export async function middleware(req: NextRequest) {
   );
 
   const { data: { user } } = await supabase.auth.getUser();
-
   const { pathname } = req.nextUrl;
 
   if (isAdmin(pathname)) {

@@ -1,34 +1,15 @@
 // ─── PUT + DELETE /api/admin/products/[id] ────────────────────────────────────
-//
-// PUT    → update any product fields (partial update, PATCH semantics)
-// DELETE → soft-delete: sets is_active = false instead of removing the row
-//
-// Both methods require the caller to be authenticated and is_admin = true.
-//
-// PUT request body (all fields optional):
-//   name, slug, price, category, description, compare_at_price,
-//   images, stock_quantity, is_featured, is_active
-//
-// Status codes:
-//   200 → success
-//   400 → validation error (e.g. bad slug format, no fields to update)
-//   401 → no session
-//   403 → not an admin
-//   404 → product not found
-//   500 → database error
 
 import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin, createAdminClient } from "../../../_lib/supabase"
 import type { ProductUpdatePayload } from "../../../_lib/types"
 
-// ✅ FIXED: params is now a Promise (required in newer Next.js)
-interface RouteContext {
-  params: Promise<{ id: string }>
-}
-
 // ─── PUT /api/admin/products/[id] ────────────────────────────────────────────
 
-export async function PUT(req: NextRequest, { params }: RouteContext) {
+export async function PUT(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     await requireAdmin()
   } catch (authResponse) {
@@ -37,7 +18,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    const { id } = await params // ✅ FIXED: await params
+    const { id } = await context.params
 
     if (!id) {
       return NextResponse.json(
@@ -69,10 +50,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
     if (body.slug !== undefined) {
       if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(body.slug)) {
         return NextResponse.json(
-          {
-            error:
-              "slug must be lowercase letters, numbers, and hyphens only",
-          },
+          { error: "slug must be lowercase letters, numbers, and hyphens only" },
           { status: 400 }
         )
       }
@@ -131,10 +109,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       .single()
 
     if (updateError) {
-      console.error(
-        `[PUT /api/admin/products/${id}] Update error:`,
-        updateError
-      )
+      console.error(`[PUT /api/admin/products/${id}] Update error:`, updateError)
       return NextResponse.json(
         { error: "Failed to update product" },
         { status: 500 }
@@ -153,7 +128,10 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 
 // ─── DELETE /api/admin/products/[id] (soft delete) ───────────────────────────
 
-export async function DELETE(req: NextRequest, { params }: RouteContext) {
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
     await requireAdmin()
   } catch (authResponse) {
@@ -162,7 +140,7 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    const { id } = await params // ✅ FIXED: await params
+    const { id } = await context.params
 
     if (!id) {
       return NextResponse.json(
@@ -196,16 +174,13 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
     const { error: deleteError } = await adminClient
       .from("products")
       .update({
-        is_active:  false,
+        is_active: false,
         updated_at: new Date().toISOString(),
       })
       .eq("id", id)
 
     if (deleteError) {
-      console.error(
-        `[DELETE /api/admin/products/${id}] Soft-delete error:`,
-        deleteError
-      )
+      console.error(`[DELETE /api/admin/products/${id}] Soft-delete error:`, deleteError)
       return NextResponse.json(
         { error: "Failed to deactivate product" },
         { status: 500 }
