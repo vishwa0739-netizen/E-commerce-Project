@@ -120,7 +120,7 @@ export function HeroSection() {
         */}
         <video
           className="hero-video-bg"
-          src="videos/water.mp4"
+          src="videos/stu.mp4"
           autoPlay
           muted
           loop
