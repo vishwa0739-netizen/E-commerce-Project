@@ -11,17 +11,17 @@ const headingF = "'Fredoka One', cursive"
 
 /* ── Main cylinder slides ── */
 const MAIN_SLIDES = [
-  { src: "/Tray.avif",         label: "Crochet Bears 🧸" },
-  { src: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700&q=80", label: "Artisan Fox 🦊" },
-  { src: "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700&q=80", label: "Knit Elephant 🐘" },
-  { src: "https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=700&q=80", label: "Block Racer 🚗" },
+  { src: "/ddb.jpg",         label: "Crochet teddy🧸" },
+  { src: "/tray2.jpg", label: "Crochet Bird 🕊️" },
+  { src: "/Tray.avif", label: "Crochet Penguin 🐧" },
+  { src: "/flo.webp", label: "Bloosm Flower 🌹" },
 ]
 
 /* ── Small box slides (independent) ── */
 const SMALL_SLIDES = [
-  { src: "https://images.unsplash.com/photo-1779384027896-3c78d80e230b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&q=80", label: "Wooden Dolls 🪆" },
-  { src: "https://images.unsplash.com/photo-1612126613408-eca07ce68773?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&q=80", label: "Felt Animals 🐾" },
-  { src: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=400&q=80", label: "Puzzle Set 🧩" },
+  { src: "/chain.webp", label: "Cute Bow 🎀" },
+  { src: "/pqpq.webp", label: "New crochet products" },
+  { src: "/bata.webp", label: "Cute Couple heart 💕" },
 ]
 
 function useAutoSlide(length: number, interval: number) {
