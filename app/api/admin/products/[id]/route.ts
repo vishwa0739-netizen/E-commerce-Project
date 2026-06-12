@@ -21,14 +21,14 @@ import { NextRequest, NextResponse } from "next/server"
 import { requireAdmin, createAdminClient } from "../../../_lib/supabase"
 import type { ProductUpdatePayload } from "../../../_lib/types"
 
+// ✅ FIXED: params is now a Promise (required in newer Next.js)
 interface RouteContext {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 // ─── PUT /api/admin/products/[id] ────────────────────────────────────────────
 
 export async function PUT(req: NextRequest, { params }: RouteContext) {
-  // ── Auth guard ───────────────────────────────────────────────────────────
   try {
     await requireAdmin()
   } catch (authResponse) {
@@ -37,7 +37,7 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    const { id } = params
+    const { id } = await params // ✅ FIXED: await params
 
     if (!id) {
       return NextResponse.json(
@@ -46,7 +46,6 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       )
     }
 
-    // ── Parse body ─────────────────────────────────────────────────────────
     let body: ProductUpdatePayload
 
     try {
@@ -58,7 +57,6 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       )
     }
 
-    // ── Validate optional fields that were provided ────────────────────────
     if (body.price !== undefined) {
       if (typeof body.price !== "number" || body.price < 0) {
         return NextResponse.json(
@@ -80,8 +78,6 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       }
     }
 
-    // Build the update payload — only include keys the caller sent.
-    // This prevents accidentally nulling out fields not in the request.
     const updates: Partial<ProductUpdatePayload & { updated_at: string }> = {}
 
     const allowedKeys: (keyof ProductUpdatePayload)[] = [
@@ -99,7 +95,6 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 
     for (const key of allowedKeys) {
       if (key in body) {
-        // TypeScript needs the cast here because key is a union type
         ;(updates as Record<string, unknown>)[key] = body[key]
       }
     }
@@ -111,10 +106,8 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       )
     }
 
-    // Always stamp updated_at so the frontend can show "last modified"
     updates.updated_at = new Date().toISOString()
 
-    // ── Check the product exists ───────────────────────────────────────────
     const adminClient = createAdminClient()
 
     const { data: existing, error: findError } = await adminClient
@@ -130,7 +123,6 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
       )
     }
 
-    // ── Apply update ───────────────────────────────────────────────────────
     const { data: updated, error: updateError } = await adminClient
       .from("products")
       .update(updates)
@@ -162,7 +154,6 @@ export async function PUT(req: NextRequest, { params }: RouteContext) {
 // ─── DELETE /api/admin/products/[id] (soft delete) ───────────────────────────
 
 export async function DELETE(req: NextRequest, { params }: RouteContext) {
-  // ── Auth guard ───────────────────────────────────────────────────────────
   try {
     await requireAdmin()
   } catch (authResponse) {
@@ -171,7 +162,7 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
   }
 
   try {
-    const { id } = params
+    const { id } = await params // ✅ FIXED: await params
 
     if (!id) {
       return NextResponse.json(
@@ -182,7 +173,6 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
 
     const adminClient = createAdminClient()
 
-    // ── Confirm product exists before attempting the update ────────────────
     const { data: existing, error: findError } = await adminClient
       .from("products")
       .select("id, is_active")
@@ -197,22 +187,17 @@ export async function DELETE(req: NextRequest, { params }: RouteContext) {
     }
 
     if (!existing.is_active) {
-      // Already soft-deleted — treat as idempotent success
       return NextResponse.json(
         { message: "Product was already deactivated", id },
         { status: 200 }
       )
     }
 
-    // ── Soft delete: flip is_active = false ────────────────────────────────
-    // We intentionally do NOT remove the row so:
-    //   • Order history referencing this product stays intact
-    //   • The product can be reactivated later
     const { error: deleteError } = await adminClient
       .from("products")
       .update({
-        is_active:   false,
-        updated_at:  new Date().toISOString(),
+        is_active:  false,
+        updated_at: new Date().toISOString(),
       })
       .eq("id", id)
 

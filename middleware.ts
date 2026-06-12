@@ -38,12 +38,10 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  // Always use getUser() — more secure than getSession()
   const { data: { user } } = await supabase.auth.getUser();
 
   const { pathname } = req.nextUrl;
 
-  // ── Admin routes ──────────────────────────────────────────────
   if (isAdmin(pathname)) {
     if (!user) {
       const loginUrl = req.nextUrl.clone();
@@ -66,7 +64,6 @@ export async function middleware(req: NextRequest) {
     return res;
   }
 
-  // ── Protected user routes ─────────────────────────────────────
   if (isProtected(pathname)) {
     if (!user) {
       const loginUrl = req.nextUrl.clone();
