@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-/* ── Icons ── */
 function IconHeart({ size = 20, filled = false }: { size?: number; filled?: boolean }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill={filled ? "#FF78AC" : "none"}
@@ -77,7 +76,6 @@ export function Navbar() {
 
   return (
     <>
-      {/* ── Global styles injected once ── */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
 
@@ -92,30 +90,23 @@ export function Navbar() {
           transition: background 0.2s, color 0.2s;
           letter-spacing: 0.02em;
         }
-        .cn-nav-link:hover,
-        .cn-nav-link.active {
+        .cn-nav-link:hover, .cn-nav-link.active {
           background: rgba(232, 201, 106, 0.15);
           color: #ffffff;
-        }
-        .cn-nav-link.active {
-          color: #ffffff;
-          text-shadow: 0 0 12px rgba(232,201,106,0.6);
         }
         .cn-icon-btn {
           display: flex;
           flex-direction: column;
           align-items: center;
           gap: 2px;
-          padding: 6px 12px;
+          padding: 6px 8px;
           border-radius: 12px;
           text-decoration: none;
           color: #fff;
           transition: background 0.15s;
           cursor: pointer;
         }
-        .cn-icon-btn:hover {
-          background: rgba(255,255,255,0.12);
-        }
+        .cn-icon-btn:hover { background: rgba(255,255,255,0.12); }
         .cn-icon-label {
           font-family: ${font};
           font-weight: 700;
@@ -123,9 +114,43 @@ export function Navbar() {
           line-height: 1;
           color: rgba(255,255,255,0.65);
         }
+
+        /* ── Offer banner — single line on mobile ── */
+        .cn-offer-banner {
+          background: linear-gradient(90deg, #1A1A2E 0%, #7B2D8B 40%, #C0392B 100%);
+          padding: 6px 12px;
+          text-align: center;
+          font-family: ${font};
+          font-weight: 800;
+          font-size: 0.85rem;
+          color: #fff;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 60;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          flex-wrap: nowrap;
+          white-space: nowrap;
+          overflow: hidden;
+          min-height: 32px;
+        }
+        @media (max-width: 600px) {
+          .cn-offer-banner {
+            font-size: 0.7rem;
+            gap: 4px;
+            padding: 5px 8px;
+          }
+          .cn-offer-hide-mobile { display: none !important; }
+        }
+
         @media (max-width: 768px) {
           .cn-desktop-links { display: none !important; }
           .cn-hamburger { display: flex !important; }
+          .cn-logo { font-size: 1.3rem !important; }
         }
         @media (min-width: 769px) {
           .cn-hamburger { display: none !important; }
@@ -133,58 +158,36 @@ export function Navbar() {
         }
       `}</style>
 
-      {/* ── Offer Banner ── */}
-      <div style={{
-        background: "linear-gradient(90deg, #1A1A2E 0%, #7B2D8B 40%, #C0392B 100%)",
-        padding: "8px 16px",
-        textAlign: "center",
-        fontFamily: font,
-        fontWeight: 800,
-        fontSize: "0.85rem",
-        color: "#fff",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "12px",
-        position: "relative",
-        zIndex: 60,
-      }}>
+      {/* ── Offer Banner — fixed at very top ── */}
+      <div className="cn-offer-banner">
         <span>🎉</span>
-        <span>GRAND OPENING SALE — 30% off everything until 30 June!</span>
+        <span>30% off until 30 June!</span>
         <span>Use code <strong style={{
           backgroundColor: "#fff", color: PINK,
-          borderRadius: "6px", padding: "1px 8px", fontFamily: "monospace",
+          borderRadius: "6px", padding: "1px 8px",
+          fontFamily: "monospace", fontSize: "0.85em",
         }}>CRAFT30</strong></span>
-        <span>🎉</span>
+        <span className="cn-offer-hide-mobile">🎉</span>
       </div>
 
-      {/*
-        ── FLOATING LOGO — absolutely positioned top-left, outside nav pill ──
-        Place this BEFORE the nav so it renders underneath the pill on z-axis
-        but above the hero video. Adjust `top` to match your banner height.
-      */}
+      {/* ── Floating Logo ── */}
       <div style={{
         position: "fixed",
-        top: scrolled ? "44px" : "46px",
-        left: "28px",
+        top: scrolled ? "40px" : "42px",
+        left: "16px",
         zIndex: 55,
         transition: "top 0.25s",
-        pointerEvents: "auto",
       }}>
-        <Link href="/" style={{ textDecoration: "none", display: "inline-block" }}>
-          {/* Subtle glow backdrop so logo is readable on any bg */}
-          <div style={{
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <div className="cn-logo" style={{
             fontFamily: "'Pacifico', cursive",
-            fontSize: scrolled ? "1.5rem" : "1.85rem",
+            fontSize: scrolled ? "1.3rem" : "1.55rem",
             lineHeight: 1,
             transition: "font-size 0.25s",
             filter: "drop-shadow(0 2px 12px rgba(255,120,172,0.55))",
           }}>
             <span style={{ color: PINK }}>Craft</span>
-            <span style={{
-              color: "#fff",
-              textShadow: "0 0 20px rgba(255,255,255,0.35)",
-            }}>Nest</span>
+            <span style={{ color: "#fff", textShadow: "0 0 20px rgba(255,255,255,0.35)" }}>Nest</span>
           </div>
         </Link>
       </div>
@@ -192,38 +195,33 @@ export function Navbar() {
       {/* ── Main Glass Navbar ── */}
       <nav style={{
         position: "fixed",
-        top: scrolled ? "36px" : "38px",   /* sits just below banner height */
+        top: scrolled ? "32px" : "34px",
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 54,
-        transition: "top 0.25s, width 0.25s, padding 0.25s",
-        width: scrolled ? "min(680px, 90vw)" : "min(760px, 88vw)",
+        transition: "top 0.25s, width 0.25s",
+        width: scrolled ? "min(680px, 92vw)" : "min(760px, 90vw)",
       }}>
-        {/* Glass pill */}
         <div style={{
           backgroundColor: "rgba(30, 30, 50, 0.38)",
           backdropFilter: "blur(22px) saturate(180%)",
           WebkitBackdropFilter: "blur(22px) saturate(180%)",
           borderRadius: "50px",
           border: "1.5px solid rgba(255,255,255,0.18)",
-          boxShadow: `
-            0 8px 32px rgba(0,0,0,0.35),
-            0 1.5px 0 rgba(255,255,255,0.12) inset,
-            0 -1px 0 rgba(0,0,0,0.2) inset
-          `,
-          padding: scrolled ? "8px 24px" : "10px 28px",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.35)",
+          padding: scrolled ? "6px 16px" : "8px 20px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          gap: "16px",
+          justifyContent: "flex-end",
+          gap: "8px",
           transition: "padding 0.25s",
         }}>
 
-          {/* Desktop nav links — centred in pill */}
+          {/* Desktop nav links */}
           <ul className="cn-desktop-links" style={{
             display: "flex",
             alignItems: "center",
-            gap: "4px",
+            gap: "2px",
             listStyle: "none",
             margin: 0,
             padding: 0,
@@ -234,10 +232,7 @@ export function Navbar() {
               const active = pathname === href || (href !== "/" && pathname.startsWith(href))
               return (
                 <li key={label}>
-                  <Link
-                    href={href}
-                    className={`cn-nav-link${active ? " active" : ""}`}
-                  >
+                  <Link href={href} className={`cn-nav-link${active ? " active" : ""}`}>
                     {label}
                   </Link>
                 </li>
@@ -246,54 +241,37 @@ export function Navbar() {
           </ul>
 
           {/* Right icons */}
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", flexShrink: 0 }}>
-            {/* Wishlist */}
+          <div style={{ display: "flex", alignItems: "center", gap: "2px", flexShrink: 0 }}>
             <Link href="/wishlist" aria-label="Wishlist" className="cn-icon-btn">
-              <IconHeart size={19} filled={wishCount > 0} />
+              <IconHeart size={18} filled={wishCount > 0} />
               <span className="cn-icon-label" style={{ color: wishCount > 0 ? PINK : undefined }}>
-                {wishCount > 0 ? `Wish (${wishCount})` : "Wishlist"}
+                {wishCount > 0 ? `Wish(${wishCount})` : "Wish"}
               </span>
             </Link>
 
-            {/* Login */}
             <Link href="/auth/login" aria-label="Sign in" className="cn-icon-btn">
-              <IconUser size={19} />
+              <IconUser size={18} />
               <span className="cn-icon-label">Login</span>
             </Link>
 
-            {/* Cart — slightly more prominent */}
             <Link href="/cart" aria-label="Cart" style={{
-              position: "relative",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               gap: "2px",
-              padding: "7px 14px",
+              padding: "6px 12px",
               backgroundColor: "rgba(255,120,172,0.88)",
               border: "1.5px solid rgba(255,255,255,0.25)",
               borderRadius: "40px",
               textDecoration: "none",
               color: "#fff",
-              backdropFilter: "blur(8px)",
               boxShadow: "0 2px 12px rgba(255,120,172,0.4)",
-              transition: "transform 0.15s, box-shadow 0.15s, background 0.15s",
-            }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "translateY(-1px)"
-                e.currentTarget.style.boxShadow = "0 4px 20px rgba(255,120,172,0.55)"
-                e.currentTarget.style.backgroundColor = "rgba(255,120,172,1)"
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "translateY(0)"
-                e.currentTarget.style.boxShadow = "0 2px 12px rgba(255,120,172,0.4)"
-                e.currentTarget.style.backgroundColor = "rgba(255,120,172,0.88)"
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
-                <IconCart size={15} />
-                <span style={{ fontFamily: headingF, fontSize: "0.95rem", lineHeight: 1 }}>{cartCount}</span>
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                <IconCart size={14} />
+                <span style={{ fontFamily: headingF, fontSize: "0.9rem", lineHeight: 1 }}>{cartCount}</span>
               </div>
-              <span style={{ fontFamily: font, fontWeight: 800, fontSize: "0.62rem", lineHeight: 1 }}>Cart</span>
+              <span style={{ fontFamily: font, fontWeight: 800, fontSize: "0.6rem", lineHeight: 1 }}>Cart</span>
             </Link>
 
             {/* Mobile hamburger */}
@@ -308,13 +286,12 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile dropdown — drops below the pill */}
+        {/* Mobile dropdown */}
         {menuOpen && (
           <div className="cn-mobile-menu" style={{
             marginTop: "10px",
-            backgroundColor: "rgba(20, 20, 40, 0.82)",
+            backgroundColor: "rgba(20, 20, 40, 0.92)",
             backdropFilter: "blur(24px)",
-            WebkitBackdropFilter: "blur(24px)",
             borderRadius: "24px",
             border: "1.5px solid rgba(255,255,255,0.15)",
             padding: "20px 28px",

@@ -52,15 +52,14 @@ export function HeroSection() {
 
         /* Video fills section, clipped within */
         .hero-video-bg {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-          z-index: 0;
-          /* slight slow-down for ambience */
-          filter: brightness(0.72) saturate(1.15);
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;  /* ← focus on top for mobile */
+        z-index: 0;
+        filter: brightness(0.72) saturate(1.15);
         }
 
         /* Gradient overlay so left-side text stays crisp */
@@ -104,7 +103,7 @@ export function HeroSection() {
           (banner ~36px + navbar pill ~60px + buffer = ~110px).
           Adjust this value if your banner height changes.
         */
-        paddingTop: "110px",
+        paddingTop: "clamp(90px, 15vw, 130px)",
         position: "relative",
         overflow: "hidden",
         borderBottom: `3px solid ${DARK}`,
