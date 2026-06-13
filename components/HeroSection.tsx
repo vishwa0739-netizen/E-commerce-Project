@@ -11,17 +11,17 @@ const headingF = "'Fredoka One', cursive"
 
 /* ── Main cylinder slides ── */
 const MAIN_SLIDES = [
-  { src: "/ddb.jpg",         label: "Crochet teddy🧸" },
+  { src: "/ddb.jpg",   label: "Crochet teddy🧸" },
   { src: "/tray2.jpg", label: "Crochet Bird 🕊️" },
   { src: "/Tray.avif", label: "Crochet Penguin 🐧" },
-  { src: "/flo.webp", label: "Bloosm Flower 🌹" },
+  { src: "/flo.webp",  label: "Bloosm Flower 🌹" },
 ]
 
 /* ── Small box slides (independent) ── */
 const SMALL_SLIDES = [
   { src: "/chain.webp", label: "Cute Bow 🎀" },
-  { src: "/pqpq.webp", label: "New crochet products" },
-  { src: "/bata.webp", label: "Cute Couple heart 💕" },
+  { src: "/pqpq.webp",  label: "New crochet products" },
+  { src: "/bata.webp",  label: "Cute Couple heart 💕" },
 ]
 
 function useAutoSlide(length: number, interval: number) {
@@ -50,7 +50,47 @@ export function HeroSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
 
-        /* Content sits above overlay */
+        /*
+          ── BACKGROUND VIDEO ──
+          Tips for best results:
+          • Use a 9:16 (vertical/portrait) video for best PC + mobile coverage.
+          • On PC: the horizontal center of the tall video is shown (crops top/bottom slightly).
+          • On mobile: the full vertical frame fills naturally.
+          • object-fit: cover always fills the container without distortion.
+        */
+        .hero-video-bg {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center center; /* centred on both axes */
+          z-index: 0;
+          /* Brightness raised to 0.92 so the video looks close to the original */
+          filter: brightness(0.92) saturate(1.08);
+        }
+
+        /* On narrow screens, bias toward the top of the frame */
+        @media (max-width: 640px) {
+          .hero-video-bg {
+            object-position: center top;
+          }
+        }
+
+        /* Overlay: much lighter than before so video colour shows through */
+        .hero-overlay {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background: linear-gradient(
+            105deg,
+            rgba(26, 26, 46, 0.55) 0%,   /* was 0.82 */
+            rgba(26, 26, 46, 0.25) 45%,   /* was 0.55 */
+            rgba(26, 26, 46, 0.05) 100%   /* was 0.10 */
+          );
+        }
+
+        /* Content sits above video + overlay */
         .hero-content {
           position: relative;
           z-index: 2;
@@ -70,6 +110,16 @@ export function HeroSection() {
         .story-btn:hover {
           background-color: ${TEAL} !important;
         }
+
+        /* ── Mobile layout tweaks ── */
+        @media (max-width: 640px) {
+          .hero-collage {
+            display: none !important; /* hide image collage on small screens — video is the visual */
+          }
+          .hero-text {
+            flex: 1 1 100% !important;
+          }
+        }
       `}</style>
 
       <section style={{
@@ -77,9 +127,24 @@ export function HeroSection() {
         position: "relative",
         overflow: "hidden",
         borderBottom: `3px solid ${DARK}`,
-        backgroundColor: "#ffffff",
+        backgroundColor: "#0d0d1a",
         minHeight: "100vh",
       }}>
+
+        {/* ── BACKGROUND VIDEO ── */}
+        <video
+          className="hero-video-bg"
+          src="/droplet.mp4"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+        />
+
+        {/* Lighter gradient overlay */}
+        <div className="hero-overlay" />
 
         {/* ── Main content wrapper ── */}
         <div className="hero-content" style={{
@@ -93,7 +158,7 @@ export function HeroSection() {
         }}>
 
           {/* ────────── LEFT TEXT ────────── */}
-          <div style={{ flex: "1 1 320px", zIndex: 1 }}>
+          <div className="hero-text" style={{ flex: "1 1 320px", zIndex: 1 }}>
 
             <div style={{
               display: "inline-flex",
@@ -115,11 +180,11 @@ export function HeroSection() {
 
             <h1 style={{
               fontFamily: "'Pacifico', cursive",
-              color: DARK,
+              color: "#ffffff",
               fontSize: "clamp(2.6rem, 6vw, 5rem)",
               lineHeight: 1.1,
               margin: "0 0 12px",
-              textShadow: "none",
+              textShadow: "0 2px 24px rgba(0,0,0,0.5)",
             }}>
               Handmade
               <br />
@@ -130,7 +195,7 @@ export function HeroSection() {
             <p style={{
               fontFamily: font,
               fontSize: "1.1rem",
-              color: "rgba(26,26,46,0.75)",
+              color: "rgba(255,255,255,0.85)",
               maxWidth: "460px",
               lineHeight: 1.75,
               margin: "0 0 32px",
@@ -157,9 +222,9 @@ export function HeroSection() {
                 Shop the Collection →
               </Link>
               <Link href="/about" className="story-btn" style={{
-                backgroundColor: "rgba(26,26,46,0.08)",
-                color: DARK,
-                border: `2px solid rgba(26,26,46,0.25)`,
+                backgroundColor: "rgba(255,255,255,0.1)",
+                color: "#fff",
+                border: `2px solid rgba(255,255,255,0.45)`,
                 borderRadius: "50px",
                 padding: "14px 32px",
                 fontFamily: font,
@@ -188,7 +253,7 @@ export function HeroSection() {
                     fontFamily: font,
                     fontSize: "0.78rem",
                     fontWeight: 700,
-                    color: "rgba(26,26,46,0.5)",
+                    color: "rgba(255,255,255,0.6)",
                     textTransform: "uppercase",
                     letterSpacing: "0.06em",
                   }}>{l}</div>
@@ -197,8 +262,8 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* ────────── RIGHT: IMAGE COLLAGE ────────── */}
-          <div style={{ flex: "1 1 300px", maxWidth: "500px", position: "relative", minHeight: "460px" }}>
+          {/* ────────── RIGHT: IMAGE COLLAGE (hidden on mobile) ────────── */}
+          <div className="hero-collage" style={{ flex: "1 1 300px", maxWidth: "500px", position: "relative", minHeight: "460px" }}>
 
             {/* ── MAIN CYLINDER ── */}
             <div style={{
