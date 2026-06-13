@@ -50,32 +50,7 @@ export function HeroSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
 
-        /* Video fills section, clipped within */
-        .hero-video-bg {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center top;  /* ← focus on top for mobile */
-        z-index: 0;
-        filter: brightness(0.72) saturate(1.15);
-        }
-
-        /* Gradient overlay so left-side text stays crisp */
-        .hero-overlay {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          background: linear-gradient(
-            105deg,
-            rgba(26, 26, 46, 0.82) 0%,
-            rgba(26, 26, 46, 0.55) 45%,
-            rgba(26, 26, 46, 0.10) 100%
-          );
-        }
-
-        /* Content sits above video + overlay */
+        /* Content sits above overlay */
         .hero-content {
           position: relative;
           z-index: 2;
@@ -98,38 +73,13 @@ export function HeroSection() {
       `}</style>
 
       <section style={{
-        /*
-          IMPORTANT: The hero needs top padding to clear the fixed glass navbar
-          (banner ~36px + navbar pill ~60px + buffer = ~110px).
-          Adjust this value if your banner height changes.
-        */
         paddingTop: "clamp(90px, 15vw, 130px)",
         position: "relative",
         overflow: "hidden",
         borderBottom: `3px solid ${DARK}`,
-        /* Give the section a dark fallback while video loads */
-        backgroundColor: "#0d0d1a",
+        backgroundColor: "#ffffff",
         minHeight: "100vh",
       }}>
-
-        {/*
-          ── BACKGROUND VIDEO ──
-          Place your compiled video at /public/pink_leaves.mp4
-          (i.e. copy pink_leaves.mp4 into your Next.js /public folder)
-        */}
-        <video
-          className="hero-video-bg"
-          src="videos/stu.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          aria-hidden="true"
-        />
-
-        {/* Gradient overlay for text legibility */}
-        <div className="hero-overlay" />
 
         {/* ── Main content wrapper ── */}
         <div className="hero-content" style={{
@@ -165,11 +115,11 @@ export function HeroSection() {
 
             <h1 style={{
               fontFamily: "'Pacifico', cursive",
-              color: "#ffffff",
+              color: DARK,
               fontSize: "clamp(2.6rem, 6vw, 5rem)",
               lineHeight: 1.1,
               margin: "0 0 12px",
-              textShadow: "0 2px 24px rgba(0,0,0,0.5)",
+              textShadow: "none",
             }}>
               Handmade
               <br />
@@ -180,7 +130,7 @@ export function HeroSection() {
             <p style={{
               fontFamily: font,
               fontSize: "1.1rem",
-              color: "rgba(255,255,255,0.85)",
+              color: "rgba(26,26,46,0.75)",
               maxWidth: "460px",
               lineHeight: 1.75,
               margin: "0 0 32px",
@@ -207,9 +157,9 @@ export function HeroSection() {
                 Shop the Collection →
               </Link>
               <Link href="/about" className="story-btn" style={{
-                backgroundColor: "rgba(255,255,255,0.1)",
-                color: "#fff",
-                border: `2px solid rgba(255,255,255,0.45)`,
+                backgroundColor: "rgba(26,26,46,0.08)",
+                color: DARK,
+                border: `2px solid rgba(26,26,46,0.25)`,
                 borderRadius: "50px",
                 padding: "14px 32px",
                 fontFamily: font,
@@ -238,7 +188,7 @@ export function HeroSection() {
                     fontFamily: font,
                     fontSize: "0.78rem",
                     fontWeight: 700,
-                    color: "rgba(255,255,255,0.6)",
+                    color: "rgba(26,26,46,0.5)",
                     textTransform: "uppercase",
                     letterSpacing: "0.06em",
                   }}>{l}</div>
@@ -393,7 +343,7 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* ── Marquee strip — sits on top of video too ── */}
+        {/* ── Marquee strip ── */}
         <div style={{
           position: "relative",
           zIndex: 2,
