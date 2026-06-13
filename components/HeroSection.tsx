@@ -134,7 +134,7 @@ export function HeroSection() {
         {/* ── BACKGROUND VIDEO ── */}
         <video
           className="hero-video-bg"
-          src="/droplet.mp4"
+          src="/tdy.mp4"
           autoPlay
           muted
           loop
