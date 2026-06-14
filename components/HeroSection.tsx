@@ -141,6 +141,16 @@ export function HeroSection() {
           playsInline
           preload="auto"
           aria-hidden="true"
+          style={{
+    position: "absolute",
+    right: "-5%",
+    top: "50%",
+    transform: "translateY(-50%) scale(0.65)",
+    width: "55%",
+    height: "auto",
+    objectFit: "contain",
+    pointerEvents: "none",
+  }}
         />
 
         {/* Lighter gradient overlay */}
@@ -156,7 +166,6 @@ export function HeroSection() {
           alignItems: "center",
           gap: "48px",
         }}>
-
           {/* ────────── LEFT TEXT ────────── */}
           <div className="hero-text" style={{ flex: "1 1 320px", zIndex: 1 }}>
 
