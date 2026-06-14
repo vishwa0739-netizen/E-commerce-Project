@@ -52,10 +52,10 @@ const heading = "'Fredoka One', cursive";
 
 // FIX #05 — real social hrefs (update these URLs to your actual pages)
 const socialLinks = [
-  { icon: IconInstagram, label: "Instagram", color: "#FF78AC", href: "https://www.instagram.com/craftnest" },
-  { icon: IconYoutube,   label: "YouTube",   color: "#FF5757", href: "https://www.youtube.com/@craftnest" },
-  { icon: IconTwitterX,  label: "Twitter",   color: "#A8D5E3", href: "https://twitter.com/craftnest" },
-  { icon: IconFacebook,  label: "Facebook",  color: "#6BCB77", href: "https://www.facebook.com/craftnest" },
+  { icon: IconInstagram, label: "Instagram", color: "#FF78AC", href: "https://www.instagram.com/vis._.xa/" },
+  { icon: IconYoutube,   label: "YouTube",   color: "#FF5757", href: "https://www.youtube.com/@Vishwa_007-bs5mq" },
+  { icon: IconTwitterX,  label: "Twitter",   color: "#A8D5E3", href: "https://x.com/vish_xa" },
+  { icon: IconFacebook,  label: "Facebook",  color: "#6BCB77", href: "https://www.facebook.com/profile.php?id=61584895137767" },
 ];
 
 // FIX #06 — footer link content for popup box
