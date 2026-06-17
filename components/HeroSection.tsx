@@ -9,15 +9,13 @@ const DARK    = "#1A1A2E"
 const font    = "'Nunito', sans-serif"
 const headingF = "'Fredoka One', cursive"
 
-/* ── Main cylinder slides ── */
 const MAIN_SLIDES = [
   { src: "/ddb.jpg",   label: "Crochet teddy🧸" },
   { src: "/tray2.jpg", label: "Crochet Bird 🕊️" },
   { src: "/Tray.avif", label: "Crochet Penguin 🐧" },
-  { src: "/flo.webp",  label: "Bloosm Flower 🌹" },
+  { src: "/flo.webp",  label: "Blossom Flower 🌹" },
 ]
 
-/* ── Small box slides (independent) ── */
 const SMALL_SLIDES = [
   { src: "/chain.webp", label: "Cute Bow 🎀" },
   { src: "/pqpq.webp",  label: "New crochet products" },
@@ -42,7 +40,7 @@ function useAutoSlide(length: number, interval: number) {
 }
 
 export function HeroSection() {
-  const main  = useAutoSlide(MAIN_SLIDES.length,  3800)
+  const main  = useAutoSlide(MAIN_SLIDES.length, 3800)
   const small = useAutoSlide(SMALL_SLIDES.length, 2600)
 
   return (
@@ -50,125 +48,110 @@ export function HeroSection() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
 
-        /*
-          ── BACKGROUND VIDEO ──
-          Tips for best results:
-          • Use a 9:16 (vertical/portrait) video for best PC + mobile coverage.
-          • On PC: the horizontal center of the tall video is shown (crops top/bottom slightly).
-          • On mobile: the full vertical frame fills naturally.
-          • object-fit: cover always fills the container without distortion.
-        */
         .hero-video-bg {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center center; /* centred on both axes */
+          object-position: center center;
           z-index: 0;
-          /* Brightness raised to 0.92 so the video looks close to the original */
           filter: brightness(0.92) saturate(1.08);
         }
-
-        /* On narrow screens, bias toward the top of the frame */
         @media (max-width: 640px) {
-          .hero-video-bg {
-            object-position: center top;
-          }
+          .hero-video-bg { object-position: center top; }
         }
 
-        /* Overlay: much lighter than before so video colour shows through */
+        /* FIX #01 — lighter overlay so hero content is clearly visible */
         .hero-overlay {
           position: absolute;
           inset: 0;
           z-index: 1;
           background: linear-gradient(
             105deg,
-            rgba(26, 26, 46, 0.55) 0%,   /* was 0.82 */
-            rgba(26, 26, 46, 0.25) 45%,   /* was 0.55 */
-            rgba(26, 26, 46, 0.05) 100%   /* was 0.10 */
+            rgba(26, 26, 46, 0.60) 0%,
+            rgba(26, 26, 46, 0.28) 50%,
+            rgba(26, 26, 46, 0.08) 100%
           );
         }
 
-        /* Content sits above video + overlay */
-        .hero-content {
-          position: relative;
-          z-index: 2;
-        }
+        .hero-content { position: relative; z-index: 2; }
 
-        /* Marquee animation */
         @keyframes marquee {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
 
-        /* Shop button hover */
         .shop-btn:hover {
           transform: translate(-2px, -2px) !important;
-          box-shadow: 6px 6px 0 ${DARK} !important;
+          box-shadow: 6px 6px 0 rgba(0,0,0,0.4) !important;
         }
-        .story-btn:hover {
-          background-color: ${TEAL} !important;
-        }
+        .story-btn:hover { background-color: ${TEAL} !important; }
 
-        /* ── Mobile layout tweaks ── */
-        @media (max-width: 640px) {
-          .hero-collage {
-            display: none !important; /* hide image collage on small screens — video is the visual */
-          }
-          .hero-text {
-            flex: 1 1 100% !important;
-          }
+        /* FIX #01 — on mobile hide collage so text is fully readable */
+        @media (max-width: 768px) {
+          .hero-collage { display: none !important; }
+          .hero-text    { flex: 1 1 100% !important; }
         }
       `}</style>
 
       <section style={{
-        paddingTop: "clamp(90px, 15vw, 130px)",
+        /*
+          FIX #01 — paddingTop accounts for:
+            offer bar  ≈ 32px (visible for first 5s)
+            glass nav  ≈ 60px
+            extra air  ≈ 28px
+          Total: ~120px — use clamp so it scales on different screens.
+          Once the offer bar fades, the section still looks great because
+          the video background fills the full viewport.
+        */
+        paddingTop: "clamp(110px, 14vw, 140px)",
         position: "relative",
         overflow: "hidden",
         borderBottom: `3px solid ${DARK}`,
         backgroundColor: "#0d0d1a",
         minHeight: "100vh",
+        /* FIX #01 — ensure section stretches to at least full viewport */
+        display: "flex",
+        flexDirection: "column",
       }}>
 
-        {/* ── BACKGROUND VIDEO ── */}
+        {/* Background video */}
         <video
           className="hero-video-bg"
           src="/ber.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
+          autoPlay muted loop playsInline preload="auto"
           aria-hidden="true"
-          style={{
-    position: "absolute",
-    right: "-5%",
-    top: "50%",
-    transform: "translateY(-50%) scale(0.65)",
-    width: "55%",
-    height: "auto",
-    objectFit: "contain",
-    pointerEvents: "none",
-  }}
         />
-
-        {/* Lighter gradient overlay */}
         <div className="hero-overlay" />
 
-        {/* ── Main content wrapper ── */}
+        {/* Main content */}
         <div className="hero-content" style={{
           maxWidth: "1280px",
           margin: "0 auto",
-          padding: "40px 24px 56px",
+          /*
+            FIX #01 — horizontal padding is generous on desktop so the
+            text column doesn't butt up against the left logo.
+            On desktop the logo sits at left:16px outside the navbar,
+            so 24px left padding is safe — the glass nav is centered.
+          */
+          padding: "clamp(32px, 5vw, 56px) clamp(20px, 4vw, 40px) 56px",
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          gap: "48px",
+          gap: "clamp(28px, 5vw, 56px)",
+          flex: 1,
+          width: "100%",
         }}>
-          {/* ────────── LEFT TEXT ────────── */}
-          <div className="hero-text" style={{ flex: "1 1 320px", zIndex: 1 }}>
 
+          {/* ── LEFT TEXT ── */}
+          <div className="hero-text" style={{
+            flex: "1 1 320px",
+            /* FIX #01 — min-width prevents text being squished on mid-size screens */
+            minWidth: "min(320px, 100%)",
+            zIndex: 1,
+          }}>
+            {/* Pill badge */}
             <div style={{
               display: "inline-flex",
               alignItems: "center",
@@ -190,10 +173,11 @@ export function HeroSection() {
             <h1 style={{
               fontFamily: "'Pacifico', cursive",
               color: "#ffffff",
-              fontSize: "clamp(2.6rem, 6vw, 5rem)",
-              lineHeight: 1.1,
-              margin: "0 0 12px",
-              textShadow: "0 2px 24px rgba(0,0,0,0.5)",
+              /* FIX #01 — clamp keeps heading large on desktop, readable on mobile */
+              fontSize: "clamp(2.4rem, 5.5vw, 4.8rem)",
+              lineHeight: 1.12,
+              margin: "0 0 14px",
+              textShadow: "0 2px 28px rgba(0,0,0,0.55)",
             }}>
               Handmade
               <br />
@@ -203,10 +187,10 @@ export function HeroSection() {
 
             <p style={{
               fontFamily: font,
-              fontSize: "1.1rem",
-              color: "rgba(255,255,255,0.85)",
+              fontSize: "clamp(0.95rem, 1.5vw, 1.1rem)",
+              color: "rgba(255,255,255,0.88)",
               maxWidth: "460px",
-              lineHeight: 1.75,
+              lineHeight: 1.78,
               margin: "0 0 32px",
             }}>
               Every toy is crafted by hand, one stitch at a time — designed to
@@ -248,36 +232,44 @@ export function HeroSection() {
               </Link>
             </div>
 
-            <div style={{ display: "flex", gap: "32px", flexWrap: "wrap" }}>
+            {/* Stats */}
+            <div style={{ display: "flex", gap: "clamp(18px, 4vw, 40px)", flexWrap: "wrap" }}>
               {[["2,400+", "Happy Kids"], ["100%", "Handmade"], ["4.9★", "Avg Rating"]].map(([v, l]) => (
                 <div key={l}>
                   <div style={{
                     fontFamily: headingF,
-                    fontSize: "1.6rem",
+                    fontSize: "clamp(1.3rem, 2.5vw, 1.7rem)",
                     color: PINK,
                     lineHeight: 1,
                     textShadow: "0 0 16px rgba(255,120,172,0.5)",
                   }}>{v}</div>
                   <div style={{
                     fontFamily: font,
-                    fontSize: "0.78rem",
+                    fontSize: "0.75rem",
                     fontWeight: 700,
-                    color: "rgba(255,255,255,0.6)",
+                    color: "rgba(255,255,255,0.62)",
                     textTransform: "uppercase",
                     letterSpacing: "0.06em",
+                    marginTop: "3px",
                   }}>{l}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* ────────── RIGHT: IMAGE COLLAGE (hidden on mobile) ────────── */}
-          <div className="hero-collage" style={{ flex: "1 1 300px", maxWidth: "500px", position: "relative", minHeight: "460px" }}>
-
-            {/* ── MAIN CYLINDER ── */}
+          {/* ── RIGHT: IMAGE COLLAGE (hidden on mobile) ── */}
+          <div className="hero-collage" style={{
+            flex: "1 1 300px",
+            maxWidth: "480px",
+            position: "relative",
+            minHeight: "460px",
+            /* FIX #01 — slight left margin keeps collage away from edge */
+            marginLeft: "auto",
+          }}>
+            {/* MAIN CYLINDER */}
             <div style={{
               position: "absolute", top: 0, left: "8%",
-              width: "58%", aspectRatio: "3/4",
+              width: "56%", aspectRatio: "3/4",
               borderRadius: "140px 140px 24px 24px",
               border: `3px solid rgba(255,255,255,0.25)`,
               boxShadow: `6px 6px 0 rgba(0,0,0,0.4), 0 0 40px rgba(255,120,172,0.12)`,
@@ -290,20 +282,17 @@ export function HeroSection() {
                   opacity: i === main.index && !main.fading ? 1 : 0,
                   transition: "opacity 0.35s ease",
                 }}>
-                  <img src={s.src} alt={s.label}
-                    style={{
-                      width: "100%", height: "100%", objectFit: "cover",
-                      transform: i === main.index && !main.fading ? "scale(1)" : "scale(1.04)",
-                      transition: "transform 0.5s ease",
-                    }} />
+                  <img src={s.src} alt={s.label} style={{
+                    width: "100%", height: "100%", objectFit: "cover",
+                    transform: i === main.index && !main.fading ? "scale(1)" : "scale(1.04)",
+                    transition: "transform 0.5s ease",
+                  }} />
                 </div>
               ))}
-              {/* Label */}
               <div style={{
                 position: "absolute", bottom: "12px", left: "50%",
                 transform: "translateX(-50%)",
-                backgroundColor: "rgba(26,26,46,0.78)",
-                color: "#fff",
+                backgroundColor: "rgba(26,26,46,0.78)", color: "#fff",
                 borderRadius: "50px", padding: "5px 14px",
                 fontFamily: font, fontWeight: 800, fontSize: "0.78rem",
                 whiteSpace: "nowrap", backdropFilter: "blur(6px)", zIndex: 3,
@@ -311,7 +300,6 @@ export function HeroSection() {
               }}>
                 {MAIN_SLIDES[main.index].label}
               </div>
-              {/* Dots */}
               <div style={{
                 position: "absolute", top: "14px", left: "50%", transform: "translateX(-50%)",
                 display: "flex", gap: "6px", zIndex: 3,
@@ -328,10 +316,10 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* ── SMALL BOX ── */}
+            {/* SMALL BOX */}
             <div style={{
               position: "absolute", bottom: "20px", right: "0",
-              width: "46%", aspectRatio: "1/1",
+              width: "44%", aspectRatio: "1/1",
               borderRadius: "20px",
               border: `3px solid rgba(255,255,255,0.2)`,
               boxShadow: `5px 5px 0 ${PINK}, 0 0 30px rgba(255,120,172,0.2)`,
@@ -348,12 +336,10 @@ export function HeroSection() {
                     style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
               ))}
-              {/* Label */}
               <div style={{
                 position: "absolute", bottom: "8px", left: "50%",
                 transform: "translateX(-50%)",
-                backgroundColor: "rgba(26,26,46,0.78)",
-                color: "#fff",
+                backgroundColor: "rgba(26,26,46,0.78)", color: "#fff",
                 borderRadius: "50px", padding: "3px 10px",
                 fontFamily: font, fontWeight: 800, fontSize: "0.7rem",
                 whiteSpace: "nowrap", backdropFilter: "blur(6px)", zIndex: 4,
@@ -361,7 +347,6 @@ export function HeroSection() {
               }}>
                 {SMALL_SLIDES[small.index].label}
               </div>
-              {/* Dots */}
               <div style={{
                 position: "absolute", top: "8px", left: "50%", transform: "translateX(-50%)",
                 display: "flex", gap: "5px", zIndex: 4,
@@ -378,29 +363,21 @@ export function HeroSection() {
               </div>
             </div>
 
-            {/* Decorative teal circle top-right */}
+            {/* Decorative circles */}
             <div style={{
               position: "absolute", top: "-12px", right: "14px",
               width: "72px", height: "72px",
-              backgroundColor: "rgba(168,213,227,0.35)",
-              borderRadius: "50%",
-              border: `2px solid rgba(168,213,227,0.6)`,
-              backdropFilter: "blur(4px)",
-              zIndex: 1,
+              backgroundColor: "rgba(168,213,227,0.35)", borderRadius: "50%",
+              border: `2px solid rgba(168,213,227,0.6)`, backdropFilter: "blur(4px)", zIndex: 1,
             }} />
-
-            {/* Decorative green circle bottom-left */}
             <div style={{
               position: "absolute", bottom: "80px", left: "-4px",
               width: "44px", height: "44px",
-              backgroundColor: "rgba(107,203,119,0.35)",
-              borderRadius: "50%",
-              border: `2px solid rgba(107,203,119,0.6)`,
-              backdropFilter: "blur(4px)",
-              zIndex: 1,
+              backgroundColor: "rgba(107,203,119,0.35)", borderRadius: "50%",
+              border: `2px solid rgba(107,203,119,0.6)`, backdropFilter: "blur(4px)", zIndex: 1,
             }} />
 
-            {/* "New arrivals" badge */}
+            {/* New arrivals badge */}
             <div style={{
               position: "absolute", top: "18px", right: "4px",
               backgroundColor: "rgba(107,203,119,0.85)",
@@ -409,35 +386,26 @@ export function HeroSection() {
               fontFamily: headingF, fontSize: "0.88rem", color: "#fff",
               boxShadow: `3px 3px 0 rgba(0,0,0,0.3)`,
               backdropFilter: "blur(8px)",
-              transform: "rotate(4deg)",
-              zIndex: 4,
+              transform: "rotate(4deg)", zIndex: 4,
             }}>
               New arrivals! 🎉
             </div>
           </div>
         </div>
 
-        {/* ── Marquee strip ── */}
+        {/* Marquee strip */}
         <div style={{
-          position: "relative",
-          zIndex: 2,
+          position: "relative", zIndex: 2,
           backgroundColor: "rgba(26, 26, 46, 0.88)",
           backdropFilter: "blur(10px)",
           borderTop: `1.5px solid rgba(255,255,255,0.1)`,
-          padding: "10px 0",
-          overflow: "hidden",
-          whiteSpace: "nowrap",
+          padding: "10px 0", overflow: "hidden", whiteSpace: "nowrap",
         }}>
           <div style={{ display: "inline-flex", animation: "marquee 22s linear infinite" }}>
             {Array.from({ length: 8 }).map((_, i) => (
               <span key={i} style={{
-                fontFamily: headingF,
-                fontSize: "1rem",
-                color: PINK,
-                padding: "0 32px",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "14px",
+                fontFamily: headingF, fontSize: "1rem", color: PINK,
+                padding: "0 32px", display: "inline-flex", alignItems: "center", gap: "14px",
               }}>
                 🧸 Handmade Toys &nbsp;✦&nbsp;
                 <span style={{ color: "#fff" }}>Free Shipping Over ₹500</span> &nbsp;✦&nbsp;
